@@ -1,6 +1,8 @@
 package com.zmeev;
 
-public class Employee {
+import java.util.Objects;
+
+public class Employee implements Comparable<Employee>, Cloneable {
     private String name;
     private String department;
     private int wage;
@@ -40,5 +42,35 @@ public class Employee {
         return "name: " + name +
                 ", department: " + department +
                 ", wage: " + wage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return wage == employee.wage &&
+                Objects.equals(name, employee.name) &&
+                Objects.equals(department, employee.department);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, department, wage);
+    }
+
+    @Override
+    public int compareTo(Employee o) {
+        return this.wage - o.wage;
+    }
+
+    @Override
+    protected Employee clone() {
+        try {
+            return (Employee) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
