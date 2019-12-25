@@ -12,6 +12,7 @@ public class Main {
         optimizer.printAllEmployees();
         optimizer.printAverageWageByDept();
         optimizer.printPossibleTransfers();
+        optimizer.writeFile("d:/TempFiles/data.txt");
 
 //        List<Employee> e1 = new ArrayList<>();
 //        List<Employee> e2 = new ArrayList<>();

@@ -1,9 +1,6 @@
 package com.zmeev;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class OptimizerImpl implements Optimizer{
     private List<Employee> employees = new ArrayList<>();
+    private List<String> message = new ArrayList<>();
 
     public void readFile(String filePath) {
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -39,6 +37,19 @@ public class OptimizerImpl implements Optimizer{
 
     public void printPossibleTransfers() {
         checkPossibleTransfer(employees);
+        for (String s : message) {
+            System.out.println(s);
+        }
+    }
+
+    public void writeFile(String pathFile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathFile))) {
+            for (String s : message) {
+                writer.write(s +"\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Employee parser(String string) {
@@ -99,22 +110,25 @@ public class OptimizerImpl implements Optimizer{
         if (!(e1.equals(e2))) {
             if (!checkTransfer(e1, e2, avgWage1, avgWage2))
                 if (!checkTransfer(e2Copied, e1Copied, avgWage2, avgWage1))
-                    System.out.println("There are no possible variants to transfer");
-        } else System.out.println("These arrays are equal");
+                    message.add("There are no possible variants to transfer");
+        } else message.add("These arrays are equal");
     }
 
-    public void writeMessage(List<Employee> transferredWorkers, List<Employee> e1, List<Employee> e2, int i) {
+    public List<String> writeMessage(List<Employee> transferredWorkers, List<Employee> e1, List<Employee> e2, int i) {
+
         for (Employee e : transferredWorkers) {
-            System.out.println(e.getName() +
+            message.add(e.getName() +
                     " could be transferred from department " +
                     e1.get(i).getDepartment() +
                     " to department " + e2.get(i).getDepartment());
         }
-        System.out.println("Average wage in department " +
+        message.add("Average wage in department " +
                 e1.get(i).getDepartment() + " would increase up to " +
                 getAverageWage(e1) +
                 ", in department " + e2.get(i).getDepartment() +
                 " to " + getAverageWage(e2));
+
+        return message;
     }
 
     public boolean checkTransfer(List<Employee> e1, List<Employee> e2, double avgWage1, double avgWage2) {

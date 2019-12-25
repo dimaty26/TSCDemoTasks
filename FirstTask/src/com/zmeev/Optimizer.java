@@ -33,6 +33,8 @@ public interface Optimizer {
      * **/
     void printPossibleTransfers();
 
+    void writeFile(String filePath);
+
     Employee parser(String string);
 
     void showAverageWageByDept(List<Employee> employees);
@@ -45,7 +47,7 @@ public interface Optimizer {
 
     void transferBtwDept(List<Employee> e1, List<Employee> e2);
 
-    void writeMessage(List<Employee> transferredWorkers, List<Employee> e1, List<Employee> e2, int i);
+    List<String> writeMessage(List<Employee> transferredWorkers, List<Employee> e1, List<Employee> e2, int i);
 
     boolean checkTransfer(List<Employee> e1, List<Employee> e2, double avgWage1, double avgWage2);
 }
