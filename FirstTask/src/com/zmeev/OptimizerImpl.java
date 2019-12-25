@@ -1,10 +1,7 @@
 package com.zmeev;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OptimizerImpl implements Optimizer{
@@ -88,10 +85,19 @@ public class OptimizerImpl implements Optimizer{
 
     public void checkPossibleTransfer(List<Employee> employees) {
         Map<String, List<Employee>> byDept = getAverageWageByDept(employees);
+        List<String> departments = new ArrayList<>();
+
         for (Map.Entry<String, List<Employee>> map : byDept.entrySet()) {
             for (Map.Entry<String, List<Employee>> m : byDept.entrySet()) {
                 if (!(m.getKey().equals(map.getKey()))) {
-                    transferBtwDept(m.getValue(), map.getValue());
+                    if (departments.contains(m.getKey())) {
+                        break;
+                    } else {
+                        message.add("\nPossible transfers between " +
+                                m.getKey() + " and " + map.getKey() + " departments:\n");
+                        transferBtwDept(m.getValue(), map.getValue());
+                        departments.add(map.getKey());
+                    }
                 }
             }
         }
@@ -104,12 +110,11 @@ public class OptimizerImpl implements Optimizer{
         double avgWage1 = getAverageWage(e1);
         double avgWage2 = getAverageWage(e2);
 
-        List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
-        List<Employee> e2Copied = e2.stream().map(Employee::clone).collect(Collectors.toList());
+        List<List<Employee>> lists = cloneTwoLists(e1, e2);
 
         if (!(e1.equals(e2))) {
             if (!checkTransfer(e1, e2, avgWage1, avgWage2))
-                if (!checkTransfer(e2Copied, e1Copied, avgWage2, avgWage1))
+                if (!checkTransfer(lists.get(1), lists.get(0), avgWage2, avgWage1))
                     message.add("There are no possible variants to transfer");
         } else message.add("These arrays are equal");
     }
@@ -134,15 +139,29 @@ public class OptimizerImpl implements Optimizer{
     public boolean checkTransfer(List<Employee> e1, List<Employee> e2, double avgWage1, double avgWage2) {
         List<Employee> removedWorkers = new ArrayList<>();
 
-        for (int i = 0; i < e1.size(); i++) {
-            e2.add(e1.get(i));
-            removedWorkers.add(e1.get(i));
-            e1.remove(e1.get(i));
-            if (getAverageWage(e1) > avgWage1 && getAverageWage(e2) > avgWage2) {
-                writeMessage(removedWorkers, e1, e2, i);
+        List<List<Employee>> lists = cloneTwoLists(e1, e2);
+
+        for (int i = 0; i < lists.get(0).size(); i++) {
+            lists.get(1).add(lists.get(0).get(i));
+            removedWorkers.add(lists.get(0).get(i));
+            lists.get(0).remove(lists.get(0).get(i));
+            if (getAverageWage(lists.get(0)) > avgWage1 && getAverageWage(lists.get(1)) > avgWage2) {
+                writeMessage(removedWorkers, lists.get(0), lists.get(1), i);
                 return true;
             }
         }
         return false;
+    }
+
+    public List<List<Employee>> cloneTwoLists(List<Employee> e1, List<Employee> e2) {
+        List<List<Employee>> lists = new ArrayList<>();
+
+        List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
+        List<Employee> e2Copied = e2.stream().map(Employee::clone).collect(Collectors.toList());
+
+        lists.add(e1Copied);
+        lists.add(e2Copied);
+
+        return lists;
     }
 }

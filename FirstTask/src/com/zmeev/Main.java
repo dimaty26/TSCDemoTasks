@@ -6,13 +6,13 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        OptimizerImpl optimizer = new OptimizerImpl();
+        Optimizer optimizer = new OptimizerImpl();
 
         optimizer.readFile("d:/TempFiles/data");
         optimizer.printAllEmployees();
         optimizer.printAverageWageByDept();
         optimizer.printPossibleTransfers();
-        optimizer.writeFile("d:/TempFiles/data.txt");
+        //optimizer.writeFile("d:/TempFiles/data.txt");
 
 //        List<Employee> e1 = new ArrayList<>();
 //        List<Employee> e2 = new ArrayList<>();
@@ -29,5 +29,6 @@ public class Main {
 //
 //        OptimizerImpl o = new OptimizerImpl();
 //        o.transferBtwDept(e1, e2);
+//        o.printPossibleTransfers();
     }
 }

@@ -50,4 +50,6 @@ public interface Optimizer {
     List<String> writeMessage(List<Employee> transferredWorkers, List<Employee> e1, List<Employee> e2, int i);
 
     boolean checkTransfer(List<Employee> e1, List<Employee> e2, double avgWage1, double avgWage2);
+
+    List<List<Employee>> cloneTwoLists(List<Employee> e1, List<Employee> e2);
 }
