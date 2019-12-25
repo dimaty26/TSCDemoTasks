@@ -85,19 +85,19 @@ public class OptimizerImpl implements Optimizer{
 
     public void checkPossibleTransfer(List<Employee> employees) {
         Map<String, List<Employee>> byDept = getAverageWageByDept(employees);
-        List<String> departments = new ArrayList<>();
+        TreeMap<String, List<Employee>> sortedMap = new TreeMap<>();
+        sortedMap.putAll(byDept);
+        TreeMap<String, List<Employee>> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
+        reverseSortedMap.putAll(sortedMap);
+        sortedMap.pollLastEntry();
+        reverseSortedMap.pollLastEntry();
 
-        for (Map.Entry<String, List<Employee>> map : byDept.entrySet()) {
-            for (Map.Entry<String, List<Employee>> m : byDept.entrySet()) {
+        for (Map.Entry<String, List<Employee>> map : sortedMap.entrySet()) {
+            for (Map.Entry<String, List<Employee>> m : reverseSortedMap.entrySet()) {
                 if (!(m.getKey().equals(map.getKey()))) {
-                    if (departments.contains(m.getKey())) {
-                        break;
-                    } else {
-                        message.add("\nPossible transfers between " +
-                                m.getKey() + " and " + map.getKey() + " departments:\n");
-                        transferBtwDept(m.getValue(), map.getValue());
-                        departments.add(map.getKey());
-                    }
+                    message.add("\nPossible transfers between " +
+                            m.getKey() + " and " + map.getKey() + " departments:\n");
+                    transferBtwDept(m.getValue(), map.getValue());
                 }
             }
         }
