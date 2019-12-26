@@ -10,19 +10,19 @@ public class TransferProcessor {
 
     public static List<String> getPossibleTransfer(List<Employee> employees) {
 
-        Map<String, List<Employee>> byDept = getGroupedByDeptMap(employees);
+        Map<Department, List<Employee>> byDept = getGroupedByDeptMap(employees);
         //сортируем список сотрудников по департаментам
-        TreeMap<String, List<Employee>> sortedMap = new TreeMap<>();
+        TreeMap<Department, List<Employee>> sortedMap = new TreeMap<>();
         sortedMap.putAll(byDept);
         //создаем развернутый список сотрудников
-        TreeMap<String, List<Employee>> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
+        TreeMap<Department, List<Employee>> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
         reverseSortedMap.putAll(sortedMap);
         //убираем последние элементы в обоих списках
         sortedMap.pollLastEntry();
         reverseSortedMap.pollLastEntry();
 
-        for (Map.Entry<String, List<Employee>> map : sortedMap.entrySet()) {
-            for (Map.Entry<String, List<Employee>> m : reverseSortedMap.entrySet()) {
+        for (Map.Entry<Department, List<Employee>> map : sortedMap.entrySet()) {
+            for (Map.Entry<Department, List<Employee>> m : reverseSortedMap.entrySet()) {
                 if (!(m.getKey().equals(map.getKey()))) {
                     message.add("\nPossible transfers between " +
                             m.getKey() + " and " + map.getKey() + " departments:\n");

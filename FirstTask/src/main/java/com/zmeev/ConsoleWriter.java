@@ -21,7 +21,7 @@ public class ConsoleWriter {
     public static void printAverageWageByDept(List<Employee> employees) {
         System.out.println("\nAverage wage by Department\n");
         Department.getGroupedByDeptMap(employees)
-                .forEach((String key, List<Employee> empList) ->
+                .forEach((Department key, List<Employee> empList) ->
                         System.out.println(key + ": " + Calculator.getAverageWageAmongEmployees(empList)));
     }
 

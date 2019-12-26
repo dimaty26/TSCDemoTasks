@@ -1,14 +1,13 @@
 package com.zmeev;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Employee implements Comparable<Employee>, Cloneable {
     private String name;
-    private String department;
+    private Department department;
     private int wage;
 
-    public Employee(String name, String department, int wage) {
+    public Employee(String name, Department department, int wage) {
         this.name = name;
         this.department = department;
         this.wage = wage;
@@ -22,11 +21,11 @@ public class Employee implements Comparable<Employee>, Cloneable {
         this.name = name;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 

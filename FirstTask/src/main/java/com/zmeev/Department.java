@@ -11,7 +11,7 @@ public class Department {
         this.name = name;
     }
 
-    static Map<String, List<Employee>> getGroupedByDeptMap(List<Employee> employees) {
+    static Map<Department, List<Employee>> getGroupedByDeptMap(List<Employee> employees) {
         return employees.stream()
                 .collect(Collectors.groupingBy(Employee::getDepartment));
     }
