@@ -10,8 +10,8 @@ public class ConsoleWriter {
         }
     }
 
-    public static void printPossibleTransfers(List<Employee> employees, TransferProcessor processor) {
-        List<String> messages = processor.getPossibleTransfer(employees);
+    public static void printPossibleTransfers(List<Employee> employees) {
+        List<String> messages = TransferProcessor.getPossibleTransfer(employees);
 
         for (String s : messages) {
             System.out.println(s);

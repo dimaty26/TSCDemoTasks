@@ -3,14 +3,12 @@ package com.zmeev;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.zmeev.Department.getGroupedByDeptMap;
-
 public class TransferProcessor {
     private static List<String> message = new ArrayList<>();
 
     public static List<String> getPossibleTransfer(List<Employee> employees) {
 
-        Map<Department, List<Employee>> byDept = getGroupedByDeptMap(employees);
+        Map<Department, List<Employee>> byDept = Department.getGroupedByDeptMap(employees);
         //сортируем список сотрудников по департаментам
         TreeMap<Department, List<Employee>> sortedMap = new TreeMap<>();
         sortedMap.putAll(byDept);
@@ -26,8 +24,8 @@ public class TransferProcessor {
                 if (!(m.getKey().equals(map.getKey()))) {
                     message.add("\nPossible transfers between " +
                             m.getKey() + " and " + map.getKey() + " departments:\n");
-                    //добавляем все сообщения в список
-                    message.addAll(transferBtwDept(m.getValue(), map.getValue()));
+                    //выполняем трансфер между двумя отделами
+                    transferBtwDept(m.getValue(), map.getValue());
                 }
             }
         }

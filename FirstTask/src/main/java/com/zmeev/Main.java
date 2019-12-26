@@ -15,6 +15,9 @@ public class Main {
         for (String s : listOfEmployees) {
             employees.add(FileParser.parse(s));
         }
+
+        ConsoleWriter.printAverageWageByDept(employees);
+
         ResultWriter writer = new ResultWriter();
         writer.writeFile(args[1], employees);
 
