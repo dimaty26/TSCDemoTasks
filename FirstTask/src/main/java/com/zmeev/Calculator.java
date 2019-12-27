@@ -1,6 +1,7 @@
 package com.zmeev;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class Calculator {
@@ -12,6 +13,6 @@ public class Calculator {
         for (Employee e : employees) {
             sum = sum.add(e.getWage());
         }
-        return sum.divide(count);
+        return sum.divide(count, 2, RoundingMode.HALF_UP);
     }
 }

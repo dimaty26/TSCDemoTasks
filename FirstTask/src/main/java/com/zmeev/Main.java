@@ -17,10 +17,10 @@ public class Main {
         }
 
         ConsoleWriter.printAllEmployees(employees);
-        //ConsoleWriter.printAverageWageByDept(employees);
+        ConsoleWriter.printAverageWageByDept(employees);
 
-//        ResultWriter writer = new ResultWriter();
-//        writer.writeFile(args[1], employees);
+        ResultWriter writer = new ResultWriter();
+        writer.writeFile(args[1], employees);
 
     }
 }
