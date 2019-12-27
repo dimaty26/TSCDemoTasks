@@ -1,5 +1,6 @@
 package com.zmeev;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,8 +40,8 @@ public class TransferProcessor {
         Collections.sort(e1);
         Collections.sort(e2);
 
-        double avgWage1 = Calculator.getAverageWageAmongEmployees(e1);
-        double avgWage2 = Calculator.getAverageWageAmongEmployees(e2);
+        BigDecimal avgWage1 = Calculator.getAverageWageAmongEmployees(e1);
+        BigDecimal avgWage2 = Calculator.getAverageWageAmongEmployees(e2);
 
         List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
         List<Employee> e2Copied = e2.stream().map(Employee::clone).collect(Collectors.toList());
@@ -57,7 +58,7 @@ public class TransferProcessor {
         return message;
     }
 
-    private static boolean checkTransfer(List<Employee> e1, List<Employee> e2, double avgWage1, double avgWage2) {
+    private static boolean checkTransfer(List<Employee> e1, List<Employee> e2, BigDecimal avgWage1, BigDecimal avgWage2) {
         List<Employee> removedWorkers = new ArrayList<>();
 
         List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
@@ -71,8 +72,8 @@ public class TransferProcessor {
             //удаляем этого сотрудника из оригинального листа
             e1Copied.remove(e1Copied.get(i));
             //проверяем, изменилась ли средняя зарплата в отделе
-            if (Calculator.getAverageWageAmongEmployees(e1Copied) > avgWage1
-                    && Calculator.getAverageWageAmongEmployees(e2Copied) > avgWage2) {
+            if (Calculator.getAverageWageAmongEmployees(e1Copied).compareTo(avgWage1) > 0
+                    && Calculator.getAverageWageAmongEmployees(e2Copied).compareTo(avgWage2) > 0) {
                 //записываем результат
                 printMessageAboutPossibleTransfer(removedWorkers, e1Copied, e2Copied, i);
                 return true;

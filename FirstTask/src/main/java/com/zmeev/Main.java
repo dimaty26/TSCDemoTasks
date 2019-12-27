@@ -16,10 +16,11 @@ public class Main {
             employees.add(FileParser.parse(s));
         }
 
-        ConsoleWriter.printAverageWageByDept(employees);
+        ConsoleWriter.printAllEmployees(employees);
+        //ConsoleWriter.printAverageWageByDept(employees);
 
-        ResultWriter writer = new ResultWriter();
-        writer.writeFile(args[1], employees);
+//        ResultWriter writer = new ResultWriter();
+//        writer.writeFile(args[1], employees);
 
     }
 }

@@ -1,16 +1,17 @@
 package com.zmeev;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Calculator {
 
-    public static double getAverageWageAmongEmployees(List<Employee> employees) {
-        int count = employees.size();
-        int sum = 0;
+    public static BigDecimal getAverageWageAmongEmployees(List<Employee> employees) {
+        BigDecimal count = new BigDecimal(employees.size());
+        BigDecimal sum = new BigDecimal("0");
 
         for (Employee e : employees) {
-            sum += e.getWage();
+            sum = sum.add(e.getWage());
         }
-        return (double) sum / count;
+        return sum.divide(count);
     }
 }

@@ -1,13 +1,14 @@
 package com.zmeev;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Employee implements Comparable<Employee>, Cloneable {
     private String name;
     private Department department;
-    private int wage;
+    private BigDecimal wage;
 
-    public Employee(String name, Department department, int wage) {
+    public Employee(String name, Department department, BigDecimal wage) {
         this.name = name;
         this.department = department;
         this.wage = wage;
@@ -29,11 +30,11 @@ public class Employee implements Comparable<Employee>, Cloneable {
         this.department = department;
     }
 
-    public int getWage() {
+    public BigDecimal getWage() {
         return wage;
     }
 
-    public void setWage(int wage) {
+    public void setWage(BigDecimal wage) {
         this.wage = wage;
     }
 
@@ -61,7 +62,7 @@ public class Employee implements Comparable<Employee>, Cloneable {
 
     @Override
     public int compareTo(Employee o) {
-        return this.wage - o.wage;
+        return this.wage.compareTo(o.wage);
     }
 
     @Override
