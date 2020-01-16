@@ -13,7 +13,7 @@ public class ResultWriter {
                 writer.write(s +"\n");
             }
         } catch (IOException e) {
-            ConsoleHelper.printMessage("File hasn't been found. Check if data correct and try again.");
+            ConsoleHelper.printMessage("File hasn't been found. Check if data correct and try again");
         }
     }
 }
