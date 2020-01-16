@@ -13,7 +13,7 @@ public class EmployeesReader {
                 listOfEmployees.add(strings);
             }
         } catch (FileNotFoundException e) {
-            ConsoleWriter.printMessage("Файл не найден. Проверьте корректность введенных данных.");
+            ConsoleHelper.printMessage("Файл не найден. Проверьте корректность введенных данных.");
         } catch (IOException e) {
             e.printStackTrace();
         }

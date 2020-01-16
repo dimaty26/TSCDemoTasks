@@ -2,7 +2,7 @@ package com.zmeev;
 
 import java.util.List;
 
-public class ConsoleWriter {
+public class ConsoleHelper {
 
     public static void printAllEmployees(List<Employee> employees) {
         for (Employee e : employees) {
@@ -22,7 +22,7 @@ public class ConsoleWriter {
         System.out.println("\nAverage wage by Department\n");
         Department.getGroupedByDeptMap(employees)
                 .forEach((Department key, List<Employee> empList) ->
-                        System.out.println(key + ": " + Calculator.getAverageWageAmongEmployees(empList)));
+                        System.out.println(key + ": " + Employee.getAverageWageAmongEmployees(empList)));
     }
 
     public static void printMessage(String message) {

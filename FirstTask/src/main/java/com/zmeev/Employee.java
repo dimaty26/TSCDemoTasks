@@ -1,6 +1,8 @@
 package com.zmeev;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
 
 public class Employee implements Comparable<Employee>, Cloneable {
@@ -12,6 +14,17 @@ public class Employee implements Comparable<Employee>, Cloneable {
         this.name = name;
         this.department = department;
         this.wage = wage;
+    }
+
+    public static BigDecimal getAverageWageAmongEmployees(List<Employee> employees) {
+        BigDecimal count = new BigDecimal(employees.size());
+        BigDecimal sum = BigDecimal.ZERO;
+
+        for (Employee e : employees) {
+            if (e.getWage() == null) continue;
+            sum = sum.add(e.getWage());
+        }
+        return sum.divide(count, 2, RoundingMode.HALF_UP);
     }
 
     public String getName() {

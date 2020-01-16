@@ -1,7 +1,10 @@
 package com.zmeev;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TransferProcessor {
@@ -9,91 +12,66 @@ public class TransferProcessor {
 
     public static List<String> getPossibleTransfer(List<Employee> employees) {
 
-        Map<Department, List<Employee>> byDept = Department.getGroupedByDeptMap(employees);
-        //сортируем список сотрудников по департаментам
-        TreeMap<Department, List<Employee>> sortedMap = new TreeMap<>();
-        sortedMap.putAll(byDept);
-        //создаем развернутый список сотрудников
-        TreeMap<Department, List<Employee>> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
-        reverseSortedMap.putAll(sortedMap);
-        //убираем последние элементы в обоих списках
-        sortedMap.pollLastEntry();
-        reverseSortedMap.pollLastEntry();
+        Map<Department, List<Employee>> groupedByDeptMap = Department.getGroupedByDeptMap(employees);
 
-        for (Map.Entry<Department, List<Employee>> map : sortedMap.entrySet()) {
-            for (Map.Entry<Department, List<Employee>> m : reverseSortedMap.entrySet()) {
-                if (!(m.getKey().equals(map.getKey()))) {
-                    message.add("\nPossible transfers between " +
-                            m.getKey() + " and " + map.getKey() + " departments:\n");
-                    //выполняем трансфер между двумя отделами
-                    transferBtwDept(m.getValue(), map.getValue());
+        for (Map.Entry<Department, List<Employee>> entry1 : groupedByDeptMap.entrySet()) {
+            Department key1 = entry1.getKey();
+            int hash1 = System.identityHashCode(key1);
+            List<Employee> value1 = entry1.getValue();
+            for (Map.Entry<Department, List<Employee>> entry2 : groupedByDeptMap.entrySet()) {
+                Department key2 = entry2.getKey();
+                if (hash1 >= System.identityHashCode(key2)) continue;
+                List<Employee> value2 = entry2.getValue();
+                message.add(String
+                        .format("Check possible transfer between %s and %s departments:",
+                                value1.get(0).getDepartment(),
+                                value2.get(0).getDepartment()));
+                transfer(value1, value2);
+            }
+        }
+        return message;
+    }
+
+    private static List<String> transfer(List<Employee> e1, List<Employee> e2) {
+        BigDecimal avgWage1 = Employee.getAverageWageAmongEmployees(e1);
+        BigDecimal avgWage2 = Employee.getAverageWageAmongEmployees(e2);
+
+        if (avgWage1.compareTo(avgWage2) > 0) {
+            transferBetweenDepartments(e1, e2);
+        } else if (avgWage2.compareTo(avgWage1) > 0) {
+            transferBetweenDepartments(e2, e1);
+        } else {
+            message.add("No possible transfers");
+        }
+        return message;
+    }
+
+    private static void transferBetweenDepartments(List<Employee> e1, List<Employee> e2) {
+        List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
+        List<Employee> e2Copied = e2.stream().map(Employee::clone).collect(Collectors.toList());
+
+        BigDecimal avgWage1 = Employee.getAverageWageAmongEmployees(e1Copied);
+        BigDecimal avgWage2 = Employee.getAverageWageAmongEmployees(e2Copied);
+
+        for (Iterator<Employee> iterator = e1Copied.iterator(); iterator.hasNext();) {
+            if (e1Copied.size() != 1) {
+                Employee e = iterator.next();
+                if (e.getWage().compareTo(avgWage2) > 0 && e.getWage().compareTo(avgWage1) < 0) {
+                    e2Copied.add(e);
+                    iterator.remove();
+                    message.add(e.getName() + " could be transferred from department " +
+                            e.getDepartment() + " to department " +
+                            e2Copied.get(0).getDepartment()); //сотрудники уже отсортированы по департаменту
+                    avgWage1 = Employee.getAverageWageAmongEmployees(e1Copied);
+                    avgWage2 = Employee.getAverageWageAmongEmployees(e2Copied);
+                    message.add(String.format("Average wage in department %s will increase to " + avgWage2
+                                    + "\nAverage wage in department %s will increase to " + avgWage1,
+                            e.getDepartment(),
+                            e2Copied.get(0).getDepartment()));
                 }
-            }
+            } else break;
+
         }
-
-        return message;
     }
 
-    private static List<String> transferBtwDept(List<Employee> e1, List<Employee> e2) {
-
-        //сортируем списке в порядке возрастания зарплаты
-        Collections.sort(e1);
-        Collections.sort(e2);
-
-        BigDecimal avgWage1 = Calculator.getAverageWageAmongEmployees(e1);
-        BigDecimal avgWage2 = Calculator.getAverageWageAmongEmployees(e2);
-
-        List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
-        List<Employee> e2Copied = e2.stream().map(Employee::clone).collect(Collectors.toList());
-
-        if (!(e1.equals(e2))) {
-            //переставляем сотрудников из первого отдела во второй и проверяем результат
-            if (!checkTransfer(e1, e2, avgWage1, avgWage2))
-                //переставляем сотрудников из второго отдела в первый и смотрим результат
-                if (!checkTransfer(e2Copied, e1Copied, avgWage2, avgWage1))
-                    //выводим сообщение, если перестановки не дали положительный результат
-                    message.add("There are no possible variants to transfer");
-        } else message.add("These arrays are equal");
-
-        return message;
-    }
-
-    private static boolean checkTransfer(List<Employee> e1, List<Employee> e2, BigDecimal avgWage1, BigDecimal avgWage2) {
-        List<Employee> removedWorkers = new ArrayList<>();
-
-        List<Employee> e1Copied = e1.stream().map(Employee::clone).collect(Collectors.toList());
-        List<Employee> e2Copied = e2.stream().map(Employee::clone).collect(Collectors.toList());
-
-        for (int i = 0; i < e1Copied.size(); i++) {
-            //копируем сотрудника из одного списка в другой
-            e2Copied.add(e1Copied.get(i));
-            //заносим этого сотрудника в лист удаленных сотрудников
-            removedWorkers.add(e1Copied.get(i));
-            //удаляем этого сотрудника из оригинального листа
-            e1Copied.remove(e1Copied.get(i));
-            //проверяем, изменилась ли средняя зарплата в отделе
-            if (Calculator.getAverageWageAmongEmployees(e1Copied).compareTo(avgWage1) > 0
-                    && Calculator.getAverageWageAmongEmployees(e2Copied).compareTo(avgWage2) > 0) {
-                //записываем результат
-                printMessageAboutPossibleTransfer(removedWorkers, e1Copied, e2Copied, i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static void printMessageAboutPossibleTransfer(List<Employee> transferredWorkers, List<Employee> e1, List<Employee> e2, int i) {
-
-        for (Employee e : transferredWorkers) {
-            message.add(e.getName() +
-                    " could be transferred from department " +
-                    e1.get(i).getDepartment() +
-                    " to department " + e2.get(i).getDepartment());
-        }
-        message.add("Average wage in department " +
-                e1.get(i).getDepartment() + " would increase up to " +
-                Calculator.getAverageWageAmongEmployees(e1) +
-                ", in department " + e2.get(i).getDepartment() +
-                " to " + Calculator.getAverageWageAmongEmployees(e2));
-    }
 }

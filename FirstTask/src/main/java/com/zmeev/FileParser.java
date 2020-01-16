@@ -1,38 +1,111 @@
 package com.zmeev;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileParser {
-    private static String name;
-    private static Department department;
-    private static BigDecimal wage;
+
+    public static List<Employee> parseEmployees(List<String> listOfEmployees) {
+        List<Employee> employees = new ArrayList<>();
+
+        for (String s : listOfEmployees) {
+            if (parse(s) != null) {
+                employees.add(parse(s));
+            } else {
+                System.out.println(String.format("Incorrect data in a row: %s", s));
+            }
+        }
+
+        return employees;
+    }
 
     public static Employee parse(String string) {
 
-        String[] s = string.split("[^-\\w\\s\\_]");
+        String[] s = string.split("[^-\\w\\s]");
 
-        name = s[0];
-        department = new Department(s[1].replaceAll(" ", ""));
-        wage = intParser(s[2]);
+        if (s.length > 3) {
+            return null;
+        } else {
 
-        return new Employee(name, department, wage);
+            //Parsing the name
+            String name = parseName(string);
+            if (name.isEmpty()) {
+                name = "INCORRECT NAME";
+            }
+
+            //Parsing the department
+            Department department = parseDepartment(string);
+
+            //Parsing the wage
+            BigDecimal wage = parseWage(string);
+
+            if (wage != null) {
+                if (wage.compareTo(BigDecimal.ZERO) <= 0) {
+                    throw new NumberFormatException(String
+                            .format("У работника %s из отдела %s недопустимое значение зарплаты (<= 0)",
+                                    name,
+                                    department));
+                } else if (wage.compareTo(new BigDecimal("1000000000")) >= 0) {
+                    throw new NumberFormatException(String
+                            .format("У работника %s из отдела %s слишком большая зарплата",
+                                    name,
+                                    department));
+                }
+            }
+
+            return new Employee(name, department, wage);
+        }
     }
 
-    private static BigDecimal intParser(String string) {
-        BigDecimal bigDecimal = new BigDecimal(string.replaceAll(" ", ""));
+    private static String parseName(String string) {
+        String name = "";
+        String[] s = string.split("[^-\\w\\s]");
 
-        if (bigDecimal.compareTo(new BigDecimal("0")) <= 0) {
-            throw new NumberFormatException(String
-                    .format("У работника %s из отдела %s недопустимое значение зарплаты (<= 0)",
-                            name,
-                            department));
-        } else if (bigDecimal.compareTo(new BigDecimal("1000000000")) >= 0) {
-            throw new NumberFormatException(String
-                    .format("У работника %s из отдела %s слишком большая зарплата",
-                            name,
-                            department));
+        for (String str : s) {
+            if (!isDigit(str.trim()) && !isUpperCase(str.trim())) {
+                if (str.trim().matches(".*\\d.*")) name = "";
+                else name = str;
+            }
         }
+        return name;
+    }
 
-        return bigDecimal;
+    private static Department parseDepartment(String string) {
+        String[] s = string.split("[^-\\w\\s]");
+        for (String str : s) {
+            if (isUpperCase(str.trim())) return new Department(str.trim());
+        }
+        return null;
+    }
+
+    private static BigDecimal parseWage(String string) {
+        String[] s = string.split("[^-\\w\\s]");
+        for (String str : s) {
+            if (isDigit(str.trim())) {
+                return new BigDecimal(str.trim());
+            }
+        }
+        return null;
+    }
+
+    private static boolean isDigit(String s) {
+        try {
+            new BigDecimal(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isUpperCase(String s)
+    {
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) continue;
+            if (!Character.isUpperCase(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
