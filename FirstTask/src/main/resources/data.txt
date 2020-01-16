@@ -1,15 +1,42 @@
-
-Possible transfers between RSD and FD departments:
-
-Martin Mercury could be transferred from department FD to department RSD
-Average wage in department FD would increase up to 1400.0, in department RSD to 1107.5
-
-Possible transfers between PD and FD departments:
-
-Eden Hazard could be transferred from department PD to department FD
-Average wage in department PD would increase up to 1675.0, in department FD to 1372.5
-
-Possible transfers between RSD and PD departments:
-
+Check possible transfer between PD and RSD departments:
 Eden Hazard could be transferred from department PD to department RSD
-Average wage in department PD would increase up to 1675.0, in department RSD to 1155.0
+Average wage in department PD will increase to 1155.00
+Average wage in department RSD will increase to 1675.00
+Bill Negative could be transferred from department PD to department RSD
+Average wage in department PD will increase to 1244.00
+Average wage in department RSD will increase to 1750.00
+Check possible transfer between PD and FD departments:
+Eden Hazard could be transferred from department PD to department FD
+Average wage in department PD will increase to 1372.50
+Average wage in department FD will increase to 1675.00
+Bill Negative could be transferred from department PD to department FD
+Average wage in department PD will increase to 1418.00
+Average wage in department FD will increase to 1750.00
+Check possible transfer between RSD and FD departments:
+Martin Mercury could be transferred from department FD to department RSD
+Average wage in department FD will increase to 1107.50
+Average wage in department RSD will increase to 1400.00
+Richard Berankis could be transferred from department FD to department RSD
+Average wage in department FD will increase to 1146.00
+Average wage in department RSD will increase to 1500.00
+Check possible transfer between PD and RSD departments:
+Eden Hazard could be transferred from department PD to department RSD
+Average wage in department PD will increase to 1155.00
+Average wage in department RSD will increase to 1675.00
+Bill Negative could be transferred from department PD to department RSD
+Average wage in department PD will increase to 1244.00
+Average wage in department RSD will increase to 1750.00
+Check possible transfer between PD and FD departments:
+Eden Hazard could be transferred from department PD to department FD
+Average wage in department PD will increase to 1372.50
+Average wage in department FD will increase to 1675.00
+Bill Negative could be transferred from department PD to department FD
+Average wage in department PD will increase to 1418.00
+Average wage in department FD will increase to 1750.00
+Check possible transfer between RSD and FD departments:
+Martin Mercury could be transferred from department FD to department RSD
+Average wage in department FD will increase to 1107.50
+Average wage in department RSD will increase to 1400.00
+Richard Berankis could be transferred from department FD to department RSD
+Average wage in department FD will increase to 1146.00
+Average wage in department RSD will increase to 1500.00
