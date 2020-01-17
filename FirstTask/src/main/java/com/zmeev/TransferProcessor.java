@@ -20,7 +20,8 @@ public class TransferProcessor {
             List<Employee> value1 = entry1.getValue();
             for (Map.Entry<Department, List<Employee>> entry2 : groupedByDeptMap.entrySet()) {
                 Department key2 = entry2.getKey();
-                if (hash1 >= System.identityHashCode(key2)) continue;
+                int hash2 = System.identityHashCode(key2);
+                if (hash1 >= hash2) continue;
                 List<Employee> value2 = entry2.getValue();
                 message.add(String
                         .format("Check possible transfer between %s and %s departments:",
@@ -70,8 +71,6 @@ public class TransferProcessor {
                             e2Copied.get(0).getDepartment()));
                 }
             } else break;
-
         }
     }
-
 }

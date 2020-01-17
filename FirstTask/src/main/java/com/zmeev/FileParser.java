@@ -10,13 +10,16 @@ public class FileParser {
         List<Employee> employees = new ArrayList<>();
 
         for (String s : listOfEmployees) {
-            if (parse(s) != null) {
-                employees.add(parse(s));
-            } else {
-                System.out.println(String.format("Incorrect data in a row: %s", s));
+            try {
+                if (parse(s) != null) {
+                    employees.add(parse(s));
+                } else {
+                    ConsoleHelper.printMessage(String.format("Incorrect data in a row: %s", s));
+                }
+            } catch (NumberFormatException ex) {
+                ConsoleHelper.printMessage(ex.getMessage());
             }
         }
-
         return employees;
     }
 
