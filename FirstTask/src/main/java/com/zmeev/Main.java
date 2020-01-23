@@ -9,47 +9,40 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String pathToFileWithEmployees;
-        String pathToResultFile;
+        String pathToFileWithEmployees = null;
+        String pathToResultFile = null;
 
-        List<String> listOfEmployees;
-        List<Employee> employees;
+        List<Employee> listOfEmployees;
 
         EmployeesReader employeesReader = new EmployeesReader();
 
-        while (true) {
-            if (args.length == 2) {
-                if (Files.isRegularFile(Path.of(args[1])) && Files.isRegularFile(Path.of(args[0]))) {
-                    if (new File(args[0]).length() == 0) {
-                        pathToResultFile = args[0];
-                        pathToFileWithEmployees = args[1];
-                    } else {
-                        pathToResultFile = args[1];
-                        pathToFileWithEmployees = args[0];
-                        break;
-                    }
+        if (args.length == 2) {
+            if (Files.isRegularFile(Path.of(args[1])) && Files.isRegularFile(Path.of(args[0]))) {
+                if (new File(args[0]).length() == 0) {
+                    pathToResultFile = args[0];
+                    pathToFileWithEmployees = args[1];
                 } else {
-                    ConsoleHelper.printMessage("Arguments should be paths.");
-                    System.exit(1);
+                    pathToResultFile = args[1];
+                    pathToFileWithEmployees = args[0];
                 }
             } else {
-                ConsoleHelper.printMessage("Incorrect number of arguments. Please try again");
-                System.exit(1);
+                ConsoleHelper.printMessage("Arguments should be paths.");
             }
+        } else {
+            ConsoleHelper.printMessage("Incorrect number of arguments. Should be 2.");
         }
 
         listOfEmployees = employeesReader.readFile(pathToFileWithEmployees);
 
-        employees = FileParser.parseEmployees(listOfEmployees);
-
-        ConsoleHelper.printAllEmployees(employees);
-        ConsoleHelper.printAverageWageByDept(employees);
+        ConsoleHelper.printAllEmployees(listOfEmployees);
+        ConsoleHelper.printAverageWageByDept(listOfEmployees);
 
         ConsoleHelper.printMessage("\n");
-        ConsoleHelper.printPossibleTransfers(employees);
+        ConsoleHelper.printPossibleTransfers(listOfEmployees);
+
 
         ResultWriter writer = new ResultWriter();
-        List<String> possibleTransfers = TransferProcessor.getPossibleTransfer(employees);
+        List<String> possibleTransfers = TransferProcessor.getPossibleTransfer(listOfEmployees);
         writer.writeFile(pathToResultFile, possibleTransfers);
     }
 }

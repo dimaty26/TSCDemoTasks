@@ -5,12 +5,17 @@ import java.util.*;
 
 public class EmployeesReader {
 
-    public List<String> readFile(String filePath) {
-        List<String> stringList = new ArrayList<>();
+    public List<Employee> readFile(String filePath) {
+        List<Employee> stringList = new ArrayList<>();
+
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String strings;
+
             while ((strings = reader.readLine()) != null) {
-                stringList.add(strings);
+                Employee employee = FileParser.parseStringToEmployee(strings);
+                if (employee != null) {
+                    stringList.add(employee);
+                }
             }
         } catch (FileNotFoundException e) {
             ConsoleHelper.printMessage("Файл не найден. Проверьте корректность введенных данных.");

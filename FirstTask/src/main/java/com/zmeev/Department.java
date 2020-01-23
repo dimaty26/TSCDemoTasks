@@ -8,13 +8,21 @@ import java.util.stream.Collectors;
 public class Department implements Comparable<Department>{
     private String name;
 
-    public Department(String name) {
-        this.name = name;
+    public Department(String name) throws IllegalAccessException {
+        if (!isDigitsOnly(name)) {
+            this.name = name;
+        } else {
+            throw new IllegalAccessException("Incorrect name of Department");
+        }
     }
 
     static Map<Department, List<Employee>> getGroupedByDeptMap(List<Employee> employees) {
         return employees.stream()
                 .collect(Collectors.groupingBy(Employee::getDepartment));
+    }
+
+    private static boolean isDigitsOnly(String stringToCheck) {
+        return stringToCheck.chars().allMatch(Character::isDigit);
     }
 
     public String getName() {
