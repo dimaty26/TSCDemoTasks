@@ -8,12 +8,16 @@ import java.util.List;
 public class ResultWriter {
 
     public void writeFile(String pathFile, List<String> strings) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathFile))) {
-            for (String s : strings) {
-                writer.write(s +"\n");
+        if (pathFile == null) {
+            ConsoleHelper.printMessage("Не был указан путь к выходному файлу.");
+        } else {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathFile))) {
+                for (String s : strings) {
+                    writer.write(s + "\n");
+                }
+            } catch (IOException e) {
+                ConsoleHelper.printMessage("File was not found. Check if data correct and try again");
             }
-        } catch (IOException e) {
-            ConsoleHelper.printMessage("File was not found. Check if data correct and try again");
         }
     }
 }

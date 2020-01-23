@@ -37,7 +37,7 @@ public class Main {
         ConsoleHelper.printAllEmployees(listOfEmployees);
         ConsoleHelper.printAverageWageByDept(listOfEmployees);
 
-        ConsoleHelper.printMessage("\n");
+        //ConsoleHelper.printMessage("\n");
         ConsoleHelper.printPossibleTransfers(listOfEmployees);
 
 

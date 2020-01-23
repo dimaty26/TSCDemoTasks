@@ -19,10 +19,12 @@ public class ConsoleHelper {
     }
 
     public static void printAverageWageByDept(List<Employee> employees) {
-        System.out.println("\nAverage wage by Department\n");
-        Department.getGroupedByDeptMap(employees)
-                .forEach((Department key, List<Employee> empList) ->
-                        System.out.println(key + ": " + Employee.getAverageWageAmongEmployees(empList)));
+        if (!employees.isEmpty()) {
+            System.out.println("\nAverage wage by Department\n");
+            Department.getGroupedByDeptMap(employees)
+                    .forEach((Department key, List<Employee> empList) ->
+                            System.out.println(key + ": " + Employee.getAverageWageAmongEmployees(empList)));
+        }
     }
 
     public static void printMessage(String message) {
