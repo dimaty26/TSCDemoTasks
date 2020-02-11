@@ -1,0 +1,5 @@
+As a result: Buyer 5 bought 213 and performed 35 purchases.
+As a result: Buyer 1 bought 188 and performed 36 purchases.
+As a result: Buyer 2 bought 206 and performed 36 purchases.
+As a result: Buyer 4 bought 188 and performed 36 purchases.
+As a result: Buyer 3 bought 205 and performed 36 purchases.
