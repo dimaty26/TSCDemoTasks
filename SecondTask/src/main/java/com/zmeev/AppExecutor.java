@@ -13,20 +13,33 @@ package com.zmeev;
 сделанных каждым покупателем не должно отличаться больше, чем на 1.
  */
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
-public class Main {
+public class AppExecutor {
     public static void main(String[] args) {
-        ExecutorService executor = Executors.newFixedThreadPool(5);
-        Stock stock = new Stock();
-        for (int i = 0; i < 5; i++) {
-            Runnable buyer = new Buyer(stock);
-            executor.execute(buyer);
+
+        if (args.length == 1) {
+            try {
+                int numberOfBuyers = Integer.parseInt(args[0]);
+                ExecutorService executor = Executors.newFixedThreadPool(numberOfBuyers);
+                Stock stock = Stock.getInstance();
+                CyclicBarrier barrier = new CyclicBarrier(numberOfBuyers);
+
+                for (int i = 1; i <= numberOfBuyers; i++) {
+                    Runnable buyer = new Buyer(stock, i, barrier);
+                    executor.execute(buyer);
+                }
+                executor.shutdown();
+                while (!executor.isTerminated()) {
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Incorrect data. Integer number is expected.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Integer number should be more than zero.");
+            }
+        } else {
+            System.out.println("Incorrect number of arguments. Should be 1 integer number.");
         }
-        executor.shutdown();
-        while (!executor.isTerminated()) {
-        }
-        System.out.println("All threads are finished.");
     }
 }

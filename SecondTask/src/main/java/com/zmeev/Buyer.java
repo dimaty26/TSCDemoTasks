@@ -1,28 +1,47 @@
 package com.zmeev;
 
-public class Buyer implements Runnable{
-    private static int countOfPurchases = 0;
-    private static int countOfUnits = 0;
-    private Stock stock;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
-    public Buyer(Stock stock) {
+public class Buyer implements Runnable {
+    private int countOfPurchases = 0;
+    private int countOfUnits = 0;
+    private int id;
+    private Stock stock;
+    private CyclicBarrier barrier;
+
+    public Buyer(Stock stock, int id, CyclicBarrier barrier) {
         this.stock = stock;
+        this.id = id;
+        this.barrier = barrier;
     }
 
-    private String buyRandomUnits() {
-        StringBuilder buffer = new StringBuilder();
+    private int buyUnits() {
+        countOfUnits += stock.sellUnits(getRandomNumberOfPurchases());
+        countOfPurchases++;
+        return countOfUnits;
+    }
 
-        countOfUnits = stock.sellUnitsFromStock();
-        buffer.append(countOfUnits).append(" ");
-        buffer.append(++countOfPurchases);
-
-        return buffer.toString();
+    private int getRandomNumberOfPurchases() {
+        return (int) (Math.random() * 10) + 1;
     }
 
     @Override
     public void run() {
-        while (Stock.getStockCount() >= 0) {
-            System.out.println(Thread.currentThread().getName() + " started " + buyRandomUnits() + " " + Stock.getStockCount());
+
+        while (Stock.getStockCount() > 0) {
+            buyUnits();
+            try {
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                //It's empty and it's ok
+            }
         }
+        if (Stock.getStockCount() == 0) {
+            barrier.reset();
+        }
+
+        System.out.println("As a result: Buyer " + id + " bought " + countOfUnits
+                + " and performed " + countOfPurchases + " purchases.");
     }
 }

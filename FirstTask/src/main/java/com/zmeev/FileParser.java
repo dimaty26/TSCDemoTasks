@@ -10,7 +10,7 @@ public class FileParser {
         BigDecimal wage = null;
 
         if (string != null) {
-            String[] s = string.split("[^-\\w\\s]");
+            String[] s = string.split("[^-\\w\\s\\.\\,\\[\\u0400-\\u04FF]");
             if (s.length == 3) {
                 if (isLettersOrDash(s[0])) {
                   name = s[0];
@@ -24,7 +24,7 @@ public class FileParser {
                 }
 
                 try {
-                    wage = new BigDecimal(s[2].trim());
+                    wage = new BigDecimal(s[2].replaceAll(",", ".").trim());
                     if (wage.compareTo(BigDecimal.ZERO) <= 0) {
                         throw new NumberFormatException(String
                                 .format("У работника %s из отдела %s недопустимое значение зарплаты (<= 0).\n",

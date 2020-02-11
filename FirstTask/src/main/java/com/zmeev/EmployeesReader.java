@@ -1,6 +1,7 @@
 package com.zmeev;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class EmployeesReader {
@@ -11,7 +12,7 @@ public class EmployeesReader {
         if (filePath == null){
             ConsoleHelper.printMessage("Не был указан путь к файлу с данными.");
         } else {
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
                 String strings;
 
                 while ((strings = reader.readLine()) != null) {
