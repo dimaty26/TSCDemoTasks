@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Stock {
     private static volatile Stock instance;
     private static int stockCount = 1000;
-    private Lock lock = new ReentrantLock();
+    private static Lock lock = new ReentrantLock();
 
     private Stock() {}
 
@@ -21,7 +21,7 @@ public class Stock {
         return instance;
     }
 
-    int sellUnits(int numberOfUnitsToSell) {
+    static int sellUnits(int numberOfUnitsToSell) {
         lock.lock();
         numberOfUnitsToSell = Math.min(stockCount, numberOfUnitsToSell);
         stockCount -= numberOfUnitsToSell;

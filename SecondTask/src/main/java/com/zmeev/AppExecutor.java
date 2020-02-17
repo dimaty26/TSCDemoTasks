@@ -18,28 +18,53 @@ import java.util.concurrent.*;
 public class AppExecutor {
     public static void main(String[] args) {
 
-        if (args.length == 1) {
-            try {
-                int numberOfBuyers = Integer.parseInt(args[0]);
-                ExecutorService executor = Executors.newFixedThreadPool(numberOfBuyers);
-                Stock stock = Stock.getInstance();
-                CyclicBarrier barrier = new CyclicBarrier(numberOfBuyers);
+        long time = timer(() -> {
+                    if (args.length == 1) {
+                        try {
+                            int numberOfBuyers = Integer.parseInt(args[0]);
+                            ExecutorService executor = Executors.newFixedThreadPool(numberOfBuyers);
+                            CyclicBarrier barrier = new CyclicBarrier(numberOfBuyers);
 
-                for (int i = 1; i <= numberOfBuyers; i++) {
-                    Runnable buyer = new Buyer(stock, i, barrier);
-                    executor.execute(buyer);
-                }
-                executor.shutdown();
-                while (!executor.isTerminated()) {
-                }
+                            for (int i = 1; i <= numberOfBuyers; i++) {
+                                Runnable buyer = new Buyer(i, barrier);
+                                executor.execute(buyer);
+                            }
+                            executor.shutdown();
+                            while (!executor.isTerminated()) {
+                            }
 
-            } catch (NumberFormatException e) {
-                System.out.println("Incorrect data. Integer number is expected.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Integer number should be more than zero.");
-            }
-        } else {
-            System.out.println("Incorrect number of arguments. Should be 1 integer number.");
+                        } catch (NumberFormatException e) {
+                            System.out.println("Incorrect data. Integer number is expected.");
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Integer number should be more than zero.");
+                        }
+                    } else {
+                        System.out.println("Incorrect number of arguments. Should be 1 integer number.");
+                    }
+                }, TimeUnit.MILLISECONDS);
+
+        System.out.println(time);
+
+        long time2 = timer( () -> {
+            sellUnitsInMain(1000);
+
+        }, TimeUnit.MILLISECONDS);
+        System.out.println(time2);
+    }
+
+    private static long timer(Runnable method, TimeUnit timeUnit) {
+        long time = System.nanoTime();
+        method.run();
+        time = System.nanoTime() - time;
+        return TimeUnit.MILLISECONDS.convert(time, timeUnit);
+    }
+
+    private static void sellUnitsInMain(int stockCount) {
+
+        while (stockCount > 0) {
+            int numberOfUnitsToSell = (int) (Math.random() * 10) + 1;
+            numberOfUnitsToSell = Math.min(stockCount, numberOfUnitsToSell);
+            stockCount -= numberOfUnitsToSell;
         }
     }
 }

@@ -4,26 +4,28 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class Buyer implements Runnable {
+    private static final int MAX_NUMBER_OF_UNITS_PER_ONE_PURCHASE = 10;
     private int countOfPurchases = 0;
     private int countOfUnits = 0;
     private int id;
-    private Stock stock;
     private CyclicBarrier barrier;
 
-    public Buyer(Stock stock, int id, CyclicBarrier barrier) {
-        this.stock = stock;
+    static {
+        Stock.getInstance();
+    }
+
+    public Buyer(int id, CyclicBarrier barrier) {
         this.id = id;
         this.barrier = barrier;
     }
 
-    private int buyUnits() {
-        countOfUnits += stock.sellUnits(getRandomNumberOfPurchases());
+    private void buyUnits() {
+        countOfUnits += Stock.sellUnits(getRandomNumberOfPurchases());
         countOfPurchases++;
-        return countOfUnits;
     }
 
     private int getRandomNumberOfPurchases() {
-        return (int) (Math.random() * 10) + 1;
+        return (int) (Math.random() * MAX_NUMBER_OF_UNITS_PER_ONE_PURCHASE) + 1; //add 1 to avoid zero
     }
 
     @Override
